@@ -10,6 +10,8 @@ Usage:
     python relay.py [port]   (default port: 9000)
 """
 
+from __future__ import annotations
+
 import asyncio
 import logging
 import signal
