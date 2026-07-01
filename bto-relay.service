@@ -1,0 +1,14 @@
+[Unit]
+Description=BattleTankOnline UDP Relay
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/udp_replay
+ExecStart=/usr/bin/python3 /home/ubuntu/udp_replay/relay.py 9000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
