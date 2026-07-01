@@ -1,13 +1,13 @@
 #!/bin/bash
-# Run once on the Oracle VPS to install and start the relay as a systemd service.
+# Run once on Oracle Linux 8 VPS to install and start the relay as a systemd service.
 set -e
 
-echo "==> Installing iptables-persistent..."
-DEBIAN_FRONTEND=noninteractive sudo apt-get install -y iptables-persistent
+echo "==> Installing Python 3.9..."
+sudo dnf install -y python39
 
-echo "==> Opening UDP port 9000..."
-sudo iptables -I INPUT -p udp --dport 9000 -j ACCEPT
-sudo netfilter-persistent save
+echo "==> Opening UDP port 9000 in firewalld..."
+sudo firewall-cmd --permanent --add-port=9000/udp
+sudo firewall-cmd --reload
 
 echo "==> Installing systemd service..."
 sudo cp bto-relay.service /etc/systemd/system/bto-relay.service

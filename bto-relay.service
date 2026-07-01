@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=ubuntu
-WorkingDirectory=/home/ubuntu/udp_replay
-ExecStart=/usr/bin/python3 /home/ubuntu/udp_replay/relay.py 9000
+User=opc
+WorkingDirectory=/home/opc/udp_replay
+ExecStart=/usr/bin/python3.9 /home/opc/udp_replay/relay.py 9000
 Restart=always
 RestartSec=5
 
