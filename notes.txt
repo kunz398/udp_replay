@@ -1,0 +1,9 @@
+# deployment guide
+git clone https://github.com/kunz398/udp_replay.git ~/udp_relay
+cd ~/udp_relay
+chmod +x setup.sh
+sudo ./setup.sh
+sudo systemctl status bto-relay
+
+#check logs
+sudo journalctl -u bto-relay -f

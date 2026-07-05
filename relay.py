@@ -86,17 +86,25 @@ async def _cleanup_loop() -> None:
 
 
 async def _health_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-    await reader.read(1024)
-    body = b'{"status":"ok"}'
-    writer.write(
-        b"HTTP/1.1 200 OK\r\n"
-        b"Content-Type: application/json\r\n"
-        b"Content-Length: " + str(len(body)).encode() + b"\r\n"
-        b"Connection: close\r\n"
-        b"\r\n" + body
-    )
-    await writer.drain()
-    writer.close()
+    try:
+        await asyncio.wait_for(reader.read(1024), timeout=5)
+        body = b'{"status":"ok"}'
+        writer.write(
+            b"HTTP/1.1 200 OK\r\n"
+            b"Content-Type: application/json\r\n"
+            b"Content-Length: " + str(len(body)).encode() + b"\r\n"
+            b"Connection: close\r\n"
+            b"\r\n" + body
+        )
+        await writer.drain()
+    except (ConnectionResetError, BrokenPipeError, asyncio.TimeoutError, OSError) as exc:
+        log.debug("health check connection dropped: %s", exc)
+    finally:
+        writer.close()
+        try:
+            await writer.wait_closed()
+        except OSError:
+            pass
 
 
 async def main() -> None:
